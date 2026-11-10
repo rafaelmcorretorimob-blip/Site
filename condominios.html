@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mapa de condomínios · BNI Vertical</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#14181f;--mut:#6b7280;--line:#e5e7eb;--bg:#fafaf8;--card:#fff;--acc:#14213d;--ok:#1f7a4d}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:520px;margin:0 auto;padding:22px 18px 48px}
+.top{font-size:13px;color:var(--mut);letter-spacing:.04em;margin-bottom:18px}
+h1{font-size:22px;font-weight:650;margin-bottom:6px}
+.sub{color:var(--mut);font-size:14px;margin-bottom:8px}
+label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:18px}
+.card h2{font-size:15px;font-weight:650}
+.card small{color:var(--mut);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.go{width:100%;margin-top:24px;padding:15px;border:0;border-radius:12px;background:var(--acc);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.go:disabled{opacity:.4}
+.err{color:#b42318;font-size:13px;margin-top:10px;min-height:1em}
+.legal{font-size:12px;color:var(--mut);margin-top:16px}
+.done{text-align:center;padding-top:60px}
+.done .ico{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:28px;margin:0 auto 18px}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+<div id="form">
+  <div class="top">BNI VERTICAL · ÁGUAS CLARAS</div>
+  <h1>Seus 3 condomínios</h1>
+  <p class="sub">Em quais condomínios você, um familiar ou um amigo próximo mora ou tem acesso? Quando um morador quiser vender, eu sei a quem pedir uma apresentação. Leva 2 minutos.</p>
+  <p class="sub">Rafael Machado · corretor de imóveis</p>
+
+  <label>Seu nome</label>
+  <input id="membro" autocomplete="name">
+  <label>Seu WhatsApp</label>
+  <input id="whats" inputmode="tel" autocomplete="tel">
+
+  <div id="cards"></div>
+
+  <label class="legal" style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink)"><input type="checkbox" id="ok" style="width:20px;height:20px;flex:none"> Os dados servem só para eu saber a quem pedir uma apresentação. Nada é divulgado e ninguém é procurado sem você saber.</label>
+  <p class="err" id="err"></p>
+  <button class="go" id="send">Enviar</button>
+</div>
+<div id="fim" class="hide done"><div class="ico">✓</div><h1>Obrigado!</h1><p class="sub">Recebi seus condomínios. Quando surgir uma oportunidade, eu falo com você antes de qualquer contato.</p></div>
+</main>
+<script>
+const WEBHOOK = 'https://rmimoveis.app.n8n.cloud/webhook/condominios';
+const $ = id => document.getElementById(id);
+const quem = ['Eu moro', 'Familiar mora', 'Amigo mora', 'Tenho imóvel lá'];
+const sim = ['Sim', 'Talvez', 'Não'];
+const chips = (n, k, opts) => `<div class="chips" data-n="${n}" data-k="${k}">${opts.map(o => `<button type="button" class="chip">${o}</button>`).join('')}</div>`;
+$('cards').innerHTML = [1, 2, 3].map(n => `<div class="card">
+  <h2>Condomínio ${n} <small>${n > 1 ? '(opcional)' : ''}</small></h2>
+  <label>Nome do condomínio ou prédio</label><input data-n="${n}" data-k="condominio" placeholder="Ex.: Reserva Parque Clube">
+  <label>Quadra, rua ou bairro</label><input data-n="${n}" data-k="endereco" placeholder="Ex.: Rua das Carnaúbas, Águas Claras">
+  <label>Quem tem acesso</label>${chips(n, 'quem', quem)}
+  <label>Nome do morador (opcional)</label><input data-n="${n}" data-k="contato">
+  <label>Você me apresentaria a ele se surgir uma oportunidade?</label>${chips(n, 'apresentar', sim)}
+  <label>Conhece o síndico?</label>${chips(n, 'sindico', sim)}
+</div>`).join('');
+const R = { 1: {}, 2: {}, 3: {} };
+document.querySelectorAll('.chips').forEach(g => g.onclick = e => {
+  if (e.target.tagName !== 'BUTTON') return;
+  [...g.children].forEach(b => b.classList.toggle('on', b === e.target));
+  R[g.dataset.n][g.dataset.k] = e.target.textContent;
+});
+$('send').onclick = async () => {
+  const err = $('err');
+  document.querySelectorAll('input[data-n]').forEach(i => R[i.dataset.n][i.dataset.k] = i.value.trim());
+  const lista = [1, 2, 3].map(n => R[n]).filter(c => c.condominio);
+  if ($('membro').value.trim().length < 3) return err.textContent = 'Digite seu nome.';
+  if (!lista.length) return err.textContent = 'Informe pelo menos um condomínio.';
+  if (!$('ok').checked) return err.textContent = 'Marque que está de acordo.';
+  err.textContent = ''; $('send').disabled = true; $('send').textContent = 'Enviando…';
+  try {
+    const r = await fetch(WEBHOOK, { method: 'POST', body: new URLSearchParams({ d: JSON.stringify({ membro: $('membro').value.trim(), whatsapp: $('whats').value.trim(), condominios: lista }) }) });
+    if (!r.ok) throw 0;
+    $('form').classList.add('hide'); $('fim').classList.remove('hide'); scrollTo(0, 0);
+  } catch (e) { err.textContent = 'Sem conexão. Tente de novo.'; $('send').disabled = false; $('send').textContent = 'Enviar'; }
+};
+</script>
+</body>
+</html>
