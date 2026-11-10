@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Visita · Rafael Machado</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#14181f;--mut:#6b7280;--line:#e5e7eb;--bg:#fafaf8;--card:#fff;--acc:#14213d;--ok:#1f7a4d}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);padding:0 0 env(safe-area-inset-bottom)}
+main{max-width:520px;margin:0 auto;padding:20px 18px 40px}
+header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
+header b{font-size:15px;letter-spacing:.02em}
+header span{font-size:13px;color:var(--mut)}
+.steps{display:flex;gap:6px;margin-bottom:22px}
+.steps i{flex:1;height:3px;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--acc)}
+h1{font-size:22px;font-weight:650;margin-bottom:4px}
+.sub{color:var(--mut);font-size:14px;margin-bottom:20px}
+section{display:none}section.on{display:block}
+label{display:block;font-size:13px;color:var(--mut);margin:16px 0 6px}
+input,textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:transparent}
+textarea{min-height:70px;resize:vertical}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:9px 14px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.case{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:14px 16px;margin-bottom:10px;font:inherit;cursor:pointer;color:var(--ink)}
+.case small{display:block;color:var(--mut);font-size:13px;margin-top:2px}
+.case.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px;color:#374151;margin-top:18px}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;color:var(--ink)}
+.check input{width:20px;height:20px;flex:none;margin-top:1px}
+.pad{position:relative;margin-top:6px}
+.pad canvas{width:100%;height:150px;background:var(--card);border:1px dashed #c7cbd1;border-radius:12px;touch-action:none;display:block}
+.pad button{position:absolute;right:8px;top:8px;border:0;background:none;color:var(--mut);font-size:13px;cursor:pointer}
+.pad em{position:absolute;left:16px;bottom:12px;color:#c0c4ca;font-style:normal;font-size:13px;pointer-events:none}
+.rate{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px}
+.rate span{font-size:15px}
+.rate .dots{display:flex;gap:6px;flex:none}
+.rate .dots button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);font:inherit;font-size:14px;color:var(--mut);cursor:pointer}
+.rate .dots button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.go{width:100%;margin-top:26px;padding:15px;border:0;border-radius:12px;background:var(--acc);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.go:disabled{opacity:.35}
+.ghost{width:100%;margin-top:10px;padding:12px;border:0;background:none;color:var(--mut);font:inherit;font-size:14px;cursor:pointer}
+.hide{display:none!important}
+.err{color:#b42318;font-size:13px;margin-top:10px;min-height:1em}
+.done{text-align:center;padding-top:40px}
+.done .ico{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:28px;margin:0 auto 18px}
+.legal{font-size:12px;color:var(--mut);margin-top:22px}
+.legal a{color:var(--mut)}
+details{margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
+summary{font-size:14px;color:var(--mut);cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<header><b>RAFAEL MACHADO</b><span>Corretor de imóveis</span></header>
+<div class="steps"><i class="on"></i><i></i><i></i></div>
+
+<!-- 1. VISITA (Rafael preenche) -->
+<section id="s1" class="on">
+  <h1>Nova visita</h1>
+  <p class="sub" id="hoje"></p>
+  <label>Imóvel</label>
+  <input id="imovel" placeholder="Ex.: Parque Clube, 3 quartos, 104 m²">
+  <label>Como é a visita?</label>
+  <button class="case" data-caso="direto">Cliente direto no meu imóvel<small>Recebo o comprador sem outro corretor</small></button>
+  <button class="case" data-caso="parceiro_no_meu">Corretor parceiro no meu imóvel<small>Outro corretor traz o cliente dele</small></button>
+  <button class="case" data-caso="meu_cliente_fora">Meu cliente em imóvel de terceiro<small>Imóvel de corretor parceiro ou do proprietário</small></button>
+
+  <div id="parc" class="hide">
+    <label id="parcTit">Corretor parceiro</label>
+    <input id="pNome" placeholder="Nome">
+    <div class="row" style="margin-top:10px">
+      <div><input id="pTel" inputmode="tel" placeholder="WhatsApp"></div>
+      <div id="creciBox"><input id="pCreci" placeholder="CRECI"></div>
+    </div>
+    <input id="pImob" placeholder="Imobiliária (opcional)" style="margin-top:10px">
+  </div>
+  <p class="err" id="e1"></p>
+  <button class="go" id="b1">Passar para o cliente</button>
+</section>
+
+<!-- 2. TERMO (cliente preenche e assina) -->
+<section id="s2">
+  <h1>Registro de visita</h1>
+  <p class="sub">Leva menos de um minuto.</p>
+  <label>Seu nome completo</label>
+  <input id="cNome" autocomplete="name">
+  <div class="row">
+    <div><label>WhatsApp</label><input id="cTel" inputmode="tel" autocomplete="tel"></div>
+    <div><label>CPF <span style="opacity:.6">(opcional)</span></label><input id="cCpf" inputmode="numeric" maxlength="14"></div>
+  </div>
+  <div class="box" id="termo"></div>
+  <label>Sua assinatura</label>
+  <div class="pad"><canvas id="sig1"></canvas><button data-clear="sig1">limpar</button><em>Assine com o dedo</em></div>
+  <label class="check"><input type="checkbox" id="ok"> Li e concordo. Meus dados servem só para registrar esta visita e falar comigo sobre ela.</label>
+  <p class="err" id="e2"></p>
+  <button class="go" id="b2">Assinar</button>
+  <p class="legal"><a href="/privacidade.html" target="_blank">Política de privacidade</a></p>
+</section>
+
+<!-- 3. DEPOIS DA VISITA -->
+<section id="s3">
+  <h1>Como foi a visita?</h1>
+  <p class="sub"><b id="s3imovel"></b><br>Sua opinião sincera ajuda a achar o imóvel certo. De 1 (ruim) a 5 (ótimo).</p>
+  <div id="rates"></div>
+  <label>O que mais gostou?</label>
+  <textarea id="mais"></textarea>
+  <label>O que menos gostou?</label>
+  <textarea id="menos"></textarea>
+  <label>Tem interesse em comprar este imóvel?</label>
+  <div class="chips" data-q="interesse"><button class="chip">Sim</button><button class="chip">Talvez</button><button class="chip">Não</button></div>
+  <div id="qComprador">
+    <label>Como pretende pagar?</label>
+    <div class="chips" data-q="pagamento" data-multi="1"><button class="chip">À vista</button><button class="chip">Financiamento</button><button class="chip">FGTS</button><button class="chip">Permuta</button></div>
+    <label>Quando pretende comprar?</label>
+    <div class="chips" data-q="prazo"><button class="chip">Agora</button><button class="chip">Até 3 meses</button><button class="chip">3 a 6 meses</button><button class="chip">Sem pressa</button></div>
+  </div>
+  <div id="propBox" class="hide">
+    <label>Proposta (valor)</label>
+    <input id="pValor" inputmode="numeric" placeholder="R$">
+    <label>Condições</label>
+    <textarea id="pCond" placeholder="Entrada, financiamento, prazo para resposta…"></textarea>
+    <label class="check"><input type="checkbox" id="pOk"> Confirmo esta proposta firme de negócio, assinada acima.</label>
+  </div>
+  <details id="notasBox"><summary>Notas do corretor (o cliente não vê no relatório)</summary>
+    <textarea id="notas" style="margin-top:10px" placeholder="Percepção, objeções, quem decide, próximo passo"></textarea>
+  </details>
+  <p class="err" id="e3"></p>
+  <button class="go" id="b3">Enviar</button>
+  <button class="ghost" id="b3later">Responder depois</button>
+</section>
+
+<section id="s4">
+  <div class="done"><div class="ico">✓</div><h1 id="fimT">Obrigado!</h1><p class="sub" id="fimS">Visita registrada.</p></div>
+  <button class="go hide" id="share">Enviar link da avaliação pelo WhatsApp</button>
+  <button class="ghost hide" id="copy">Copiar link</button>
+  <button class="ghost" id="nova">Nova visita</button>
+</section>
+</main>
+
+<script>
+/* ===== Configuração ===== */
+const CORRETOR = 'Rafael Machado';
+const IMOBILIARIA = 'RE/MAX Cerrado';           // trocar pela nova marca
+const WEBHOOK = 'https://rmimoveis.app.n8n.cloud/webhook/visita';
+/* ======================== */
+
+const $ = id => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+const S = { id: q.get('id') || (Date.now().toString(36) + Math.random().toString(36).slice(2, 6)), caso: '', resp: {} };
+const hojeTxt = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+$('hoje').textContent = hojeTxt.charAt(0).toUpperCase() + hojeTxt.slice(1);
+if (q.get('imovel')) $('imovel').value = q.get('imovel');
+
+function go(n) {
+  document.querySelectorAll('section').forEach((s, i) => s.classList.toggle('on', i === n - 1));
+  document.querySelectorAll('.steps i').forEach((d, i) => d.classList.toggle('on', i < Math.min(n, 3)));
+  scrollTo(0, 0);
+  if (n === 2) setTimeout(() => sizePad('sig1'), 30);
+}
+
+/* casos */
+document.querySelectorAll('.case').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.case').forEach(x => x.classList.toggle('on', x === b));
+  S.caso = b.dataset.caso;
+  $('parc').classList.toggle('hide', S.caso === 'direto');
+  $('parcTit').textContent = S.caso === 'parceiro_no_meu' ? 'Corretor parceiro' : 'Responsável pelo imóvel (corretor ou proprietário)';
+  $('creciBox').classList.toggle('hide', S.caso === 'meu_cliente_fora' && false);
+  $('pCreci').placeholder = S.caso === 'meu_cliente_fora' ? 'CRECI (se for corretor)' : 'CRECI';
+});
+if (q.get('caso')) { const b = document.querySelector('.case[data-caso="' + q.get('caso') + '"]'); if (b) b.click(); }
+
+function termo() {
+  const im = $('imovel').value.trim(), d = new Date().toLocaleDateString('pt-BR');
+  const quem = CORRETOR + ' (' + IMOBILIARIA + ')';
+  const p = $('pNome').value.trim();
+  if (S.caso === 'direto') return `Declaro que visitei o imóvel <b>${im}</b> em ${d}, apresentado por ${quem}.`;
+  if (S.caso === 'parceiro_no_meu') return `Declaro que visitei o imóvel <b>${im}</b> em ${d}, acompanhado do corretor ${p}, com apresentação de ${quem}.`;
+  return `Declaro que visitei o imóvel <b>${im}</b> em ${d}, acompanhado do meu corretor, ${quem}, com acesso dado por ${p}.`;
+}
+
+$('b1').onclick = () => {
+  if (!$('imovel').value.trim()) return $('e1').textContent = 'Informe o imóvel.';
+  if (!S.caso) return $('e1').textContent = 'Escolha como é a visita.';
+  if (S.caso !== 'direto' && !$('pNome').value.trim()) return $('e1').textContent = 'Informe o nome do ' + (S.caso === 'parceiro_no_meu' ? 'corretor parceiro.' : 'responsável pelo imóvel.');
+  $('e1').textContent = '';
+  $('termo').innerHTML = termo();
+  go(2);
+};
+
+/* assinatura */
+const pads = {};
+function sizePad(id) {
+  const c = $(id); if (!c || !c.offsetWidth) return;
+  const r = devicePixelRatio || 1; c.width = c.offsetWidth * r; c.height = c.offsetHeight * r;
+  const x = c.getContext('2d'); x.scale(r, r); x.lineWidth = 2.2; x.lineCap = x.lineJoin = 'round'; x.strokeStyle = '#14181f';
+  pads[id] = { c, x, n: 0 }; c.nextElementSibling.nextElementSibling.style.display = '';
+}
+['sig1'].forEach(id => {
+  const c = $(id); let down = false, last;
+  const pt = e => { const b = c.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  c.onpointerdown = e => { down = true; last = pt(e); c.setPointerCapture(e.pointerId); };
+  c.onpointermove = e => { if (!down) return; const p = pt(e), P = pads[id]; P.x.beginPath(); P.x.moveTo(...last); P.x.lineTo(...p); P.x.stroke(); last = p; P.n++; c.nextElementSibling.nextElementSibling.style.display = 'none'; };
+  c.onpointerup = c.onpointercancel = () => down = false;
+});
+document.querySelectorAll('[data-clear]').forEach(b => b.onclick = () => sizePad(b.dataset.clear));
+const sigData = id => { const P = pads[id]; if (!P || P.n < 8) return ''; const t = document.createElement('canvas'); t.width = 480; t.height = 150; const x = t.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 480, 150); x.drawImage(P.c, 0, 0, 480, 150); return t.toDataURL('image/jpeg', 0.6); };
+
+$('cCpf').oninput = e => { let v = e.target.value.replace(/\D/g, '').slice(0, 11); e.target.value = v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2'); };
+
+async function enviar(etapa, dados) {
+  const body = { id: S.id, etapa, enviado_em: new Date().toISOString(), ...dados };
+  if (!WEBHOOK) { console.log('[teste]', body); return true; }
+  try { const r = await fetch(WEBHOOK, { method: 'POST', body: new URLSearchParams({ d: JSON.stringify(body) }) }); return r.ok; }
+  catch (e) { return false; }
+}
+
+$('b2').onclick = async () => {
+  const e = $('e2');
+  if ($('cNome').value.trim().split(/\s+/).length < 2) return e.textContent = 'Digite seu nome completo.';
+  if ($('cTel').value.replace(/\D/g, '').length < 10) return e.textContent = 'Digite seu WhatsApp com DDD.';
+  const s1 = sigData('sig1'); if (!s1) return e.textContent = 'Faltou a sua assinatura.';
+  if (!$('ok').checked) return e.textContent = 'Marque que leu e concorda.';
+  e.textContent = ''; $('b2').disabled = true; $('b2').textContent = 'Registrando…';
+  const ok = await enviar('termo', {
+    caso: S.caso, imovel: $('imovel').value.trim(),
+    parceiro: S.caso === 'direto' ? null : { nome: $('pNome').value.trim(), telefone: $('pTel').value.trim(), creci: $('pCreci').value.trim(), imobiliaria: $('pImob').value.trim() },
+    cliente: { nome: $('cNome').value.trim(), telefone: $('cTel').value.trim(), cpf: $('cCpf').value.trim() },
+    termo: $('termo').innerText, assinatura_cliente: s1
+  });
+  $('b2').disabled = false; $('b2').textContent = 'Assinar';
+  if (!ok) return e.textContent = 'Sem conexão. Tente de novo em instantes.';
+  S.link = location.origin + location.pathname + '?id=' + S.id + '&etapa=3&caso=' + S.caso + '&imovel=' + encodeURIComponent($('imovel').value.trim());
+  history.replaceState(null, '', S.link);
+  $('s3imovel').textContent = $('imovel').value.trim();
+  go(3);
+};
+
+/* avaliação */
+const itens = ['Localização', 'Tamanho', 'Planta (disposição dos cômodos)', 'Acabamentos', 'Estado de conservação', 'Áreas comuns', 'Preço'];
+$('rates').innerHTML = itens.map((t, i) => `<div class="rate"><span>${t}</span><div class="dots" data-i="${i}">${[1, 2, 3, 4, 5].map(n => `<button>${n}</button>`).join('')}</div></div>`).join('');
+const notas = {};
+document.querySelectorAll('.dots').forEach(d => d.onclick = ev => { if (ev.target.tagName !== 'BUTTON') return; [...d.children].forEach(b => b.classList.toggle('on', b === ev.target)); notas[itens[d.dataset.i]] = +ev.target.textContent; });
+document.querySelectorAll('.chips').forEach(g => g.onclick = ev => {
+  if (ev.target.tagName !== 'BUTTON') return;
+  if (g.dataset.multi) ev.target.classList.toggle('on'); else [...g.children].forEach(b => b.classList.toggle('on', b === ev.target));
+  S.resp[g.dataset.q] = [...g.children].filter(b => b.classList.contains('on')).map(b => b.textContent).join(', ');
+  if (g.dataset.q === 'interesse') $('propBox').classList.toggle('hide', S.resp.interesse !== 'Sim');
+});
+$('pValor').oninput = e => { const v = e.target.value.replace(/\D/g, ''); e.target.value = v ? 'R$ ' + (+v).toLocaleString('pt-BR') : ''; };
+
+$('b3').onclick = async () => {
+  const e = $('e3');
+  if (Object.keys(notas).length < itens.length) return e.textContent = 'Dê uma nota para cada item.';
+  if (!S.resp.interesse) return e.textContent = 'Responda se tem interesse.';
+  const temProp = S.resp.interesse === 'Sim' && $('pValor').value;
+  if (temProp && !$('pOk').checked) return e.textContent = 'Confirme a proposta ou apague o valor.';
+  e.textContent = ''; $('b3').disabled = true; $('b3').textContent = 'Enviando…';
+  const ok = await enviar('feedback', {
+    caso: S.caso || q.get('caso') || '', notas, mais_gostou: $('mais').value.trim(), menos_gostou: $('menos').value.trim(),
+    interesse: S.resp.interesse, pagamento: S.resp.pagamento || '', prazo: S.resp.prazo || '',
+    proposta: temProp ? { valor: $('pValor').value, condicoes: $('pCond').value.trim() } : null,
+    notas_corretor: $('notas').value.trim()
+  });
+  $('b3').disabled = false; $('b3').textContent = 'Enviar';
+  if (!ok) return e.textContent = 'Sem conexão. Tente de novo em instantes.';
+  $('fimT').textContent = 'Obrigado!'; $('fimS').textContent = temProp ? 'Proposta registrada. Rafael retorna com a resposta do proprietário.' : 'Sua opinião foi registrada.' + (WEBHOOK ? '' : ' (modo de teste)');
+  go(4);
+};
+$('b3later').onclick = () => {
+  $('fimT').textContent = 'Visita registrada'; $('fimS').textContent = 'A avaliação pode ser respondida depois, pelo link.';
+  const link = S.link || location.href, wa = String($('cTel').value || '').replace(/\D/g, '');
+  const msg = 'Oi! Obrigado pela visita. Quando puder, me conta em 1 minuto o que achou do imóvel: ' + link;
+  $('share').classList.remove('hide'); $('copy').classList.remove('hide');
+  $('share').onclick = () => open('https://wa.me/' + (wa ? (wa.length <= 11 ? '55' + wa : wa) : '') + '?text=' + encodeURIComponent(msg), '_blank');
+  $('copy').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(link); $('copy').textContent = 'Link copiado'; };
+  go(4);
+};
+$('nova').onclick = () => location.href = location.pathname;
+
+if (q.get('etapa') === '3') { S.caso = q.get('caso') || ''; $('s3imovel').textContent = q.get('imovel') || ''; $('b3later').classList.add('hide'); go(3); }
+</script>
+</body>
+</html>
