@@ -36,7 +36,7 @@ input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;bord
 <div id="form">
   <div class="top">BNI VERTICAL · ÁGUAS CLARAS</div>
   <h1>Seus 3 condomínios</h1>
-  <p class="sub">Em quais condomínios você, um familiar ou um amigo próximo mora ou tem acesso? Quando um morador quiser vender, eu sei a quem pedir uma apresentação. Leva 2 minutos.</p>
+  <p class="sub">Em quais condomínios você, um familiar ou um amigo próximo mora ou tem acesso? Quando um morador quiser vender, eu sei a quem pedir uma apresentação. Leva 1 minuto.</p>
   <p class="sub">Rafael Machado · corretor de imóveis</p>
 
   <label>Seu nome</label>
@@ -55,17 +55,15 @@ input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;bord
 <script>
 const WEBHOOK = 'https://rmimoveis.app.n8n.cloud/webhook/condominios';
 const $ = id => document.getElementById(id);
-const quem = ['Eu moro', 'Familiar mora', 'Amigo mora', 'Tenho imóvel lá'];
+const quem = ['Eu', 'Familiar', 'Amigo'];
 const sim = ['Sim', 'Talvez', 'Não'];
 const chips = (n, k, opts) => `<div class="chips" data-n="${n}" data-k="${k}">${opts.map(o => `<button type="button" class="chip">${o}</button>`).join('')}</div>`;
 $('cards').innerHTML = [1, 2, 3].map(n => `<div class="card">
   <h2>Condomínio ${n} <small>${n > 1 ? '(opcional)' : ''}</small></h2>
   <label>Nome do condomínio ou prédio</label><input data-n="${n}" data-k="condominio" placeholder="Ex.: Reserva Parque Clube">
-  <label>Quadra, rua ou bairro</label><input data-n="${n}" data-k="endereco" placeholder="Ex.: Rua das Carnaúbas, Águas Claras">
+  <label>Cidade</label><input data-n="${n}" data-k="cidade" placeholder="Ex.: Águas Claras">
   <label>Quem tem acesso</label>${chips(n, 'quem', quem)}
-  <label>Nome do morador (opcional)</label><input data-n="${n}" data-k="contato">
-  <label>Você me apresentaria a ele se surgir uma oportunidade?</label>${chips(n, 'apresentar', sim)}
-  <label>Conhece o síndico?</label>${chips(n, 'sindico', sim)}
+  <label>Você me apresentaria se surgir uma oportunidade?</label>${chips(n, 'apresentar', sim)}
 </div>`).join('');
 const R = { 1: {}, 2: {}, 3: {} };
 document.querySelectorAll('.chips').forEach(g => g.onclick = e => {
