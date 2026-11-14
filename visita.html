@@ -283,6 +283,19 @@ $('b3later').onclick = () => {
 };
 $('nova').onclick = () => location.href = location.pathname;
 
+/* link direto para o cliente: ?imovel=...&caso=direto&etapa=2 (parceiro=Nome nos outros casos) abre já no termo */
+if (q.get('etapa') === '2' && q.get('imovel') && S.caso) {
+  if (q.get('parceiro')) $('pNome').value = q.get('parceiro');
+  if (S.caso === 'direto' || $('pNome').value.trim()) {
+    S.cliente = true;
+    $('termo').innerHTML = termo();
+    const nb = $('notas').closest('details'); if (nb) nb.classList.add('hide');
+    $('nova').classList.add('hide');
+    $('b3later').onclick = () => { $('fimT').textContent = 'Visita registrada'; $('fimS').textContent = 'Obrigado! Se quiser, avalie o imóvel depois com o Rafael.'; go(4); };
+    go(2);
+  }
+}
+
 if (q.get('etapa') === '3') { S.caso = q.get('caso') || ''; $('s3imovel').textContent = q.get('imovel') || ''; $('b3later').classList.add('hide'); go(3); }
 </script>
 </body>
